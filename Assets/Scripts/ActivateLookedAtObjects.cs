@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ActivateLookedAtObjects : MonoBehaviour
 {
@@ -9,8 +11,32 @@ public class ActivateLookedAtObjects : MonoBehaviour
     [SerializeField]
     private float maxDistanceToCheckForObjects = 4f;
 
+    [SerializeField]
+    private Text lookedAtObjectText;
+
+    private IActivatable lookedAtObject;
 
     private void Update()
+    {
+        UpdateLookedAtObject();
+        UpdateLookedAtObjectText();
+        HandleInput();
+    }
+
+    private void UpdateLookedAtObjectText()
+    {
+        //To Do: Change looked at object text to reflect what we are looking at
+        if (lookedAtObject == null)
+        {
+            lookedAtObjectText.text = String.Empty;
+        }
+        else
+        {
+            lookedAtObjectText.text = lookedAtObject.NameText;
+        }
+    }
+
+    private void UpdateLookedAtObject()
     {
         Debug.DrawRay(transform.position, transform.forward * maxDistanceToCheckForObjects, Color.red);
 
@@ -21,14 +47,20 @@ public class ActivateLookedAtObjects : MonoBehaviour
         {
             Debug.Log(raycastHit.transform.name + " is being looked at.");
 
-            IActivatable lookedAtObject = raycastHit.transform.GetComponent<IActivatable>();
-
-            if (lookedAtObject != null && Input.GetButtonDown("Activate"))
-            {
-                Debug.Log("This is an IActivable");
-                lookedAtObject.DoActivate();
-            }
+            lookedAtObject = raycastHit.transform.GetComponent<IActivatable>();
+        }
+        else
+        {
+            lookedAtObject = null;
         }
     }
 
+    private void HandleInput()
+    {
+        if (lookedAtObject != null && Input.GetButtonDown("Activate"))
+        {
+            Debug.Log("This is an IActivable");
+            lookedAtObject.DoActivate();
+        }
+    }
 }
