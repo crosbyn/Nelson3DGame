@@ -18,11 +18,6 @@ public class TitleScreen : MonoBehaviour
         SceneManager.LoadScene("CreditsScene");
     }
 
-    public void HowToPlayButtonClicked()
-    {
-        //Load the next scene
-        SceneManager.LoadScene("ControlsScene");
-    }
 
     public void QuitButtonClicked()
     {
