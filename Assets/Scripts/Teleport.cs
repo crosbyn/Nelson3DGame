@@ -15,8 +15,12 @@ public class Teleport : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        other.gameObject.transform.position = teleportReceive.position;
-        audioSource.Play();
+        if (other.gameObject.tag == "Player")
+        {
+            other.gameObject.transform.position = teleportReceive.position;
+            audioSource.Play();
+        }
+            
     }
 }
 
