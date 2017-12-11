@@ -7,8 +7,11 @@ public class InventoryObject : MonoBehaviour, IActivatable
     [SerializeField]
     private string nameText;
 
-    private InventoryMenu inventoryMenu;
+    [SerializeField]
+    private string descriptionText;
+
     private MeshRenderer meshRenderer;
+    private InventoryMenu inventoryMenu;
     private Collider collider;
 
     public string NameText
@@ -19,22 +22,26 @@ public class InventoryObject : MonoBehaviour, IActivatable
         }
     }
 
-    public void DoActivate()
-    {
-        //Add this object to the inventory list
-        inventoryMenu.PlayerInventory.Add(this);
+    public string DescriptionText { get { return descriptionText; } }
 
-        //Gets rid of visual representation of the object added to inventory
-        collider.enabled = false;
-        meshRenderer.enabled = false;
-    }
-
-    // Use this for initialization
-    void Start ()
+    private void Start()
     {
+        inventoryMenu = FindObjectOfType<InventoryMenu>();
         meshRenderer = GetComponent<MeshRenderer>();
         collider = GetComponent<Collider>();
-        inventoryMenu = FindObjectOfType<InventoryMenu>();
-	}
+    }
+    public void DoActivate()
+    {
+        inventoryMenu.PlayerInventory.Add(this);
+
+        // Doing this rather than destroy because our Inventory menu still needs
+        // to know about this object even though it has been collected and 
+        // removed from the 3D world.
+        // Also, if you wanted to add sound effects here,
+        // and we destroy before the sfx are done, it will not sound correct.
+        // Just like how coin worked in our 2D project!
+        meshRenderer.enabled = false;
+        collider.enabled = false;
+    }
 
 }
